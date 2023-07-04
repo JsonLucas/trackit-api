@@ -1,18 +1,31 @@
-import jsonwebtoken from 'jsonwebtoken';
+import { sign, decode, verify, JwtPayload } from 'jsonwebtoken';
 import { jwtSecret } from 'src/constants/env';
 
 interface IAuthToken {
-	generateAccessToken: (userId: number, oldAccessToken?: string) => string,
-	generateRefreshToken: (userId: number) => string
+	generateAccessAuth: (oldAccessToken?: string) => string,
+	generateRefreshToken: (userId: number) => string,
 }
 
 export class AuthToken implements IAuthToken {
-	generateAccessToken (userId: number, oldAccessToken?: string): string {
+	generateAccessAuth (oldAccessToken?: string, refreshToken?: string): string {
 		try{
-			if(oldAccessToken){
-				//implementar logica de validar o refresh token extraído do accessToken
+			if(refreshToken){
+				const { payload } = verify(refreshToken, jwtSecret, { complete: true });
+				const { userId } = payload as JwtPayload;
+				const newRefreshToken = this.generateRefreshToken(userId as number);
+				return sign(newRefreshToken, jwtSecret, { expiresIn: '7d' });
 			}
-			return "";
+
+			if(oldAccessToken){
+				const { payload } = verify(oldAccessToken, jwtSecret, { complete: true });
+				const { refreshToken } = payload as JwtPayload;
+
+				const decoded = decode(refreshToken, { complete: true });
+				const { userId } = decoded.payload as JwtPayload;
+				
+				const newRefreshToken = this.generateRefreshToken(userId as number);
+				return sign(newRefreshToken, jwtSecret, { expiresIn: '7d' });
+			}
 		} catch(e: any) {
 			throw { code: 403, error: e.message };
 		}
@@ -20,7 +33,7 @@ export class AuthToken implements IAuthToken {
 
 	generateRefreshToken (userId: number): string {
 		try{
-			const refreshToken = jsonwebtoken.sign({ userId }, jwtSecret, { expiresIn: '1d' });
+			const refreshToken = sign({ userId }, jwtSecret, { expiresIn: '30d' });
 			return refreshToken;
 		} catch(e: any) {
 			throw { code: 403, error: e.message };
