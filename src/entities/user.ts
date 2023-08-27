@@ -8,6 +8,8 @@ export interface IUser {
 	updatedAt?: Date;
 }
 export type User = Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>;
+export type SignUpUser = Omit<IUser, 'id' | 'createdAt' | 'updatedAt'> & { confirmPassword: string };
+export type SignInUser = Pick<IUser, 'email' | 'password'>;
 
 export interface IUserRepository {
 	create: (body: User) => Promise<IUser>;

@@ -3,7 +3,7 @@ import { IUser, IUserRepository, User } from "src/entities/user";
 
 export class UserRepository implements IUserRepository {
 	async create (body: User): Promise<IUser>{
-		return await prisma.users.create({data: body});
+		return await prisma.users.create({ data: body });
 	}
 	
 	async getById (id: number): Promise<IUser | null>{

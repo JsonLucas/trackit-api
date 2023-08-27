@@ -12,7 +12,7 @@ export class AuthMiddleware implements NestMiddleware {
 		if(auth[0].toLowerCase() !== "bearer") return res.status(401).send('Invalid auth format.');	
 		
 		const token = new AuthToken();
-		const accessToken = token.generateAccessAuth(auth[1]);
+		const accessToken = token.generateAccessAuth(undefined, auth[1]);
 		res.locals.accessToken = accessToken;
         next();
     }

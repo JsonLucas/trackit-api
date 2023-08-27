@@ -1,6 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from '../services/app.service';
-import { IAuthApp } from 'src/entities/auth';
 
 @Controller()
 export class AppController {

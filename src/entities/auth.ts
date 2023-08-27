@@ -1,4 +1,4 @@
-export interface IAuthApp {
+export interface IAuth {
 	refreshToken: string, 
 	accessToken: string
 }

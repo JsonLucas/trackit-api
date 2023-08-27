@@ -1,13 +1,14 @@
-import Joi from 'joi';
+const joi = require('joi');
 
-export const signUpSchema = Joi.object({
-	name: Joi.string().required(),
-	email: Joi.string().email().required(),
-	password: Joi.string().required(),
-	picture: Joi.string().allow().empty()
+export const signUpSchema = joi.object({
+	name: joi.string().required(),
+	email: joi.string().email().required(),
+	password: joi.string().required(),
+	confirmPassword: joi.ref('password'),
+	picture: joi.string().allow().empty()
 });
 
-export const signInSchema = Joi.object({
-	email: Joi.string().email().required(),
-	password: Joi.string().required(),
+export const signInSchema = joi.object({
+	email: joi.string().email().required(),
+	password: joi.string().required(),
 });

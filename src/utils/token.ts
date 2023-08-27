@@ -1,19 +1,21 @@
 import { sign, decode, verify, JwtPayload } from 'jsonwebtoken';
 import { jwtSecret } from 'src/constants/env';
+import { IAuth } from 'src/entities/auth';
+import { IGenericError } from 'src/entities/generic-object';
 
 interface IAuthToken {
-	generateAccessAuth: (oldAccessToken?: string) => string,
-	generateRefreshToken: (userId: number) => string,
+	generateAccessAuth: (userId?: number, oldAccessToken?: string, refreshToken?: string) => string | IAuth | IGenericError,
+	generateRefreshToken: (userId: number) => string | IGenericError,
 }
 
 export class AuthToken implements IAuthToken {
-	generateAccessAuth (oldAccessToken?: string, refreshToken?: string): string {
+	public generateAccessAuth (userId?: number, oldAccessToken?: string, refreshToken?: string): string | IAuth | IGenericError {
 		try{
 			if(refreshToken){
 				const { payload } = verify(refreshToken, jwtSecret, { complete: true });
 				const { userId } = payload as JwtPayload;
 				const newRefreshToken = this.generateRefreshToken(userId as number);
-				return sign(newRefreshToken, jwtSecret, { expiresIn: '7d' });
+				return sign({ refreshToken: newRefreshToken }, jwtSecret, { expiresIn: '7d' });
 			}
 
 			if(oldAccessToken){
@@ -24,19 +26,27 @@ export class AuthToken implements IAuthToken {
 				const { userId } = decoded.payload as JwtPayload;
 				
 				const newRefreshToken = this.generateRefreshToken(userId as number);
-				return sign(newRefreshToken, jwtSecret, { expiresIn: '7d' });
+				return sign({ refreshToken: newRefreshToken }, jwtSecret, { expiresIn: '7d' });
+			}
+
+			if(userId){
+				const refreshToken = this.generateRefreshToken(userId) as string;
+				const accessToken = sign({ refreshToken }, jwtSecret, { expiresIn: '7d' }) as string;
+				return { refreshToken, accessToken };
 			}
 		} catch(e: any) {
-			throw { code: 403, error: e.message };
+			console.log(e);
+			return { code: 403, message: e.message, error: e };
 		}
 	}
 
-	generateRefreshToken (userId: number): string {
+	public generateRefreshToken (userId: number): string | IGenericError {
 		try{
 			const refreshToken = sign({ userId }, jwtSecret, { expiresIn: '30d' });
 			return refreshToken;
 		} catch(e: any) {
-			throw { code: 403, error: e.message };
+			console.log(e);
+			return { code: 403, message: e.message, error: e };
 		}
 	}
 }
