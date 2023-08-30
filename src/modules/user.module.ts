@@ -3,11 +3,9 @@ import { UserController } from 'src/controllers/user.controller';
 import { AuthMiddleware } from 'src/middleware/auth.middleware';
 import { UserRepository } from 'src/repositories/user.repository';
 import { UserService } from 'src/services/user.service';
-import { Crypto } from 'src/utils/crypto';
-import { Validator } from 'src/utils/validator';
 
 @Module({
-  imports: [Validator, Crypto],
+  imports: [],
   controllers: [UserController],
   providers: [UserService, UserRepository],
 })

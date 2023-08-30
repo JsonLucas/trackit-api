@@ -4,11 +4,19 @@ import { IAuth } from 'src/entities/auth';
 import { IGenericError } from 'src/entities/generic-object';
 
 interface IAuthToken {
+	decode: (accessToken: string) => number;
 	generateAccessAuth: (userId?: number, oldAccessToken?: string, refreshToken?: string) => string | IAuth | IGenericError,
 	generateRefreshToken: (userId: number) => string | IGenericError,
 }
 
 export class AuthToken implements IAuthToken {
+	public decode(accessToken: string): number {
+		const { payload } = verify(accessToken, jwtSecret, { complete: true });
+		const { refreshToken } = payload;
+		const { userId } = decode(refreshToken, { complete: true });
+		return userId;
+	}
+
 	public generateAccessAuth (userId?: number, oldAccessToken?: string, refreshToken?: string): string | IAuth | IGenericError {
 		try{
 			if(refreshToken){
