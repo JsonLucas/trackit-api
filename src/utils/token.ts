@@ -11,9 +11,8 @@ interface IAuthToken {
 
 export class AuthToken implements IAuthToken {
 	public decode(accessToken: string): number {
-		const { payload } = verify(accessToken, jwtSecret, { complete: true });
-		const { refreshToken } = payload;
-		const { userId } = decode(refreshToken, { complete: true });
+		const { refreshToken } = decode(accessToken, jwtSecret, { complete: true });
+		const { userId } = decode(refreshToken, jwtSecret, { complete: true });
 		return userId;
 	}
 

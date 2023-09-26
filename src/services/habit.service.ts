@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { IGenericError, IGenericResponse } from "src/entities/generic-object";
-import { createHabitSchema, updateHabitSchema } from "src/helpers/habitSchema";
+import { createHabitSchema, updateHabitSchema } from "src/helpers/schemas/habitSchema";
 import { HabitRepository } from "src/repositories/habit.repository";
 import { Validator } from "src/utils/validator";
 

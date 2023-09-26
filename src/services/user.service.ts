@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IGenericError, IGenericResponse } from 'src/entities/generic-object';
-import { signInSchema, signUpSchema } from 'src/helpers/userSchema';
+import { signInSchema, signUpSchema } from 'src/helpers/schemas/userSchema';
 import { UserRepository } from 'src/repositories/user.repository';
 import { Validator } from 'src/utils/validator';
 import { CANT_QUERY_ON_DATABASE, CANT_SAVE_REGISTER_ON_DATABASE, USER_NOT_FOUND } from 'src/errors';
