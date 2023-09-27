@@ -3,12 +3,12 @@ import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { UserModule } from './user.module';
 import { HabitModule } from './habit.module';
-import { WebSocketGateway } from 'src/helpers/websocket.gateway';
+import { WebSocketModule } from './websocket.module';
 
 @Module({
-  imports: [UserModule, HabitModule],
+  imports: [UserModule, HabitModule, WebSocketModule],
   controllers: [AppController],
-  providers: [AppService, WebSocketGateway],
+  providers: [AppService],
 })
 
 export class AppModule {}

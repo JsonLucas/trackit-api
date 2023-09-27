@@ -1,6 +1,8 @@
 import { Habit, IHabit, IHabitRepository, UpdateHabit } from "src/entities/habit";
 import { prisma } from "../constants/prisma";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class HabitRepository implements IHabitRepository {
     public async create (body: Habit): Promise<IHabit> {
         return await prisma.habits.create({ data: body });
@@ -16,7 +18,7 @@ export class HabitRepository implements IHabitRepository {
     }
     
     public async getAllByUserId (userId: number): Promise<Array<IHabit | null>> {
-        return await prisma.habits.findMany({ where: { userId } });
+        return await prisma.habits.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } });
     }
     
     public async getById (id: number): Promise<IHabit | null> {

@@ -29,4 +29,12 @@ model Habits {
 	createdAt DateTime? @default(now())
 	updatedAt DateTime?
 	user Users @relation(fields: [userId], references: [id])
+	assignment AssignedHabits[]
+}
+
+model AssignedHabits {
+	id Int @id @default(autoincrement())
+	assignDate DateTime @default(now())
+	habitId Int
+	habit Habits @relation(fields: [habitId], references: [id])
 }

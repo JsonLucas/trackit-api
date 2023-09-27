@@ -1,29 +1,31 @@
+import { Injectable } from '@nestjs/common';
 import { 
     SubscribeMessage, 
     WebSocketGateway as WebSocket, 
     WebSocketServer, 
     OnGatewayConnection, 
-    OnGatewayDisconnect 
+    OnGatewayDisconnect, 
+    MessageBody,
+    ConnectedSocket
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { HabitService } from 'src/services/habit.service';
 
-@WebSocket()
+@WebSocket({ cors: true })
+@Injectable()
 export class WebSocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
-    // Handle new WebSocket connections
     console.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    // Handle WebSocket disconnections
     console.log(`Client disconnected: ${client.id}`);
   }
 
-  @SubscribeMessage('onUpdateHabit')
-  handleHabitUpdate(client: Socket, payload: string): void {
-    console.log(client);
-    this.server.emit('onUpdateHabit', { teste: 'teste' }); 
+  @SubscribeMessage('onModifyHabitList')
+  handleUpdateHabit(@ConnectedSocket() client: Socket, @MessageBody() payload: string): void {
+    this.server.emit('onModifyHabitList');
   }
 }

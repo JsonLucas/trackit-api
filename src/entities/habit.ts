@@ -6,7 +6,7 @@ export interface IHabit {
 	createdAt?: Date
 	updatedAt?: Date
 }
-export type Habit = Omit<IHabit, 'id' | 'createdAt' | 'updatedAt'>;
+export type Habit = Omit<IHabit, 'id' | 'updatedAt'>;
 export type UpdateHabit = Pick<IHabit, 'name' | 'week_days'>;
 
 export interface IHabitRepository {

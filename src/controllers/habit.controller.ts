@@ -29,7 +29,6 @@ export class HabitController {
         try{
             // const { accessToken } = res.locals;
             const accessToken = req.headers.authorization.split(' ')[1];
-            console.log(accessToken);
             const userId = this.token.decode(accessToken);
             const responseHabit = await this.HabitService.createHabit({ ...req.body, userId });
             return res.status(responseHabit.code).send(responseHabit);
@@ -74,7 +73,7 @@ export class HabitController {
         }
     }
 
-    @Get('/:weekday')
+    @Get('/weekday/:weekday')
     public async getHabitsByWeekDay(@Req() req: Request, @Res() res: Response) {
         try {
             const { weekday } = req.params;
@@ -101,7 +100,7 @@ export class HabitController {
             // const { accessToken } = res.locals;
             const accessToken = req.headers.authorization.split(' ')[1];
             const userId = this.token.decode(accessToken);
-            const response = await this.HabitService.deleteHabitById(userId, Number(id));
+            const response = await this.HabitService.deleteHabitById(Number(id), userId);
 
             return res.status(response.code).send(response);
         } catch (e: any) {
