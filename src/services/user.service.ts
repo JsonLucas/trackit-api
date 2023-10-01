@@ -15,7 +15,7 @@ export class UserService {
   private crypto = new Crypto();
   private token = new AuthToken();
 
-  constructor(private readonly UserRepository: UserRepository) { }
+  constructor(private readonly userRepository: UserRepository) { }
 
   public async signUp(body: any): Promise<IGenericResponse | IGenericError> {
     try {
@@ -24,7 +24,7 @@ export class UserService {
 
       const { email, name, password, picture } = body;
       const encrypted = this.crypto.encrypt(password);
-      await this.UserRepository.create({ email, name, picture, password: encrypted });
+      await this.userRepository.create({ email, name, picture, password: encrypted });
 
       return { code: 201, message: 'Successful created user!' };
     } catch (e: any) {
@@ -39,7 +39,7 @@ export class UserService {
       if (typeof (isValidated) !== 'boolean') return isValidated;
 
       const { email, password } = body;
-      const user = await this.UserRepository.getByEmail(email);
+      const user = await this.userRepository.getByEmail(email);
 
       if (user) {
         const decrypted = this.crypto.decrypt(user.password);
@@ -54,6 +54,17 @@ export class UserService {
     } catch (e: any) {
       console.log(e);
       return CANT_QUERY_ON_DATABASE;
+    }
+  }
+
+  public async getUserData(userId: number): Promise<IGenericResponse | IGenericError> {
+    try {
+      const user = await this.userRepository.getById(userId);
+      if(!user) return { code: 404, message: 'user not found.' };
+
+      return { code: 200, data: user };
+    } catch (e: any) {
+      console.log(e);
     }
   }
 }
