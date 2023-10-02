@@ -37,9 +37,13 @@ export class AssignmentsController {
         res.status(response.code).send(response);
     }
     
-    @Post('/create')
+    @Post('create/:habitId')
     public async createAssignment(@Req() req: Request, @Res() res: Response) {
-        const response = await this.assignmentService.createAssignment(req.body);
+        const { habitId } = req.params;
+        if(isNaN(Number(habitId)) || !habitId) return res.status(400).send({ message: 'missing a required param.' });
+
+        const body = { habitId: Number(habitId), assignDate: new Date() };
+        const response = await this.assignmentService.createAssignment(body);
         res.status(response.code).send(response);
     }
 }

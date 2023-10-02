@@ -26,6 +26,26 @@ export class HabitRepository implements IHabitRepository {
     }
     
     public async getByWeekDay (userId: number, day: number): Promise<Array<IHabit> | null> {
-        return await prisma.habits.findMany({ where: { week_days: { has: day }, userId } });
+        return await prisma.habits.findMany({ 
+            where: { 
+                week_days: { 
+                    has: day 
+                }, 
+                userId 
+            },
+            include: {
+                assignment: {
+                    select: {
+                        assignDate: true,
+                    }
+                },
+                records: {
+                    select: {
+                        currentRecord: true,
+                        previousRecord: true
+                    }
+                }
+            }
+        });
     }
 }

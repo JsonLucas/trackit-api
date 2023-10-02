@@ -62,7 +62,6 @@ export class HabitService {
     public async getHabitsByWeekDay(userId: number, day: number): Promise<IGenericError | IGenericResponse> {
         try {
             const habits = await this.HabitRepository.getByWeekDay(userId, day);
-            console.log(habits);
             if(!habits) return { code: 404, message: 'Habits not found for this week day.' };
 
             return { code: 200, data: habits };
