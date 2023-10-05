@@ -6,8 +6,8 @@ import { HabitService } from "src/services/habit.service";
 
 @Module({
     imports: [],
-    providers: [HabitRepository, HabitService, AuthMiddleware],
-    controllers: [HabitController]
+    controllers: [HabitController],
+    providers: [HabitRepository, HabitService],
 })
 export class HabitModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
